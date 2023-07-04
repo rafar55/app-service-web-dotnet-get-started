@@ -18,7 +18,7 @@ stages:
 - stage: buildapplication
   displayName: "Build .Net Framework"
   jobs:
-    - job: build-job    
+    - job: buildjob    
       steps:
       - task: NuGetToolInstaller@1
         displayName: "Installing nuget"
@@ -41,7 +41,8 @@ stages:
           artifact: 'aspnet-package'
           publishLocation: 'pipeline'
 
-- stage: "deployaws"
+- stage: deployaws
+  dependsOn: buildapplication
   displayName: "Deploy to Aws App Service"
   jobs:
     - deployment: "awsdeployment"    
