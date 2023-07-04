@@ -51,7 +51,7 @@ stages:
         runOnce:
           deploy:
            steps:
-            - download: false
+            - download: none
             - task: DownloadPipelineArtifact@2
               displayName: "Download Pipeline Artifact"
               inputs:
