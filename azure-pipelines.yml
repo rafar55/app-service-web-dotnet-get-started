@@ -24,12 +24,12 @@ steps:
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
-    msbuildArgs: '/t:build /p:DeployOnBuild=true /p:OutputPath="$(Build.ArtifactStagingDirectory)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: PublishPipelineArtifact@1
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
   inputs:
-    targetPath: '$(build.artifactStagingDirectory)'
-    artifact: 'donetframework'
-    publishLocation: 'pipeline'
+    PathtoPublish: '$(build.artifactstagingdirectory)'
+    ArtifactName: 'dotnet-framework'
