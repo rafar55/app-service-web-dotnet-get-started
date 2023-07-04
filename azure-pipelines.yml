@@ -57,7 +57,4 @@ stages:
                 azureSubscription: 'Azure Bitworks'
                 appType: 'webApp'
                 WebAppName: 'demo-asp-net'
-                packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
-               
-            
 
