@@ -14,22 +14,48 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
-steps:
-- task: NuGetToolInstaller@1
+stages:
+- stage: buildapplication
+  displayName: "Build .Net Framework"
+  jobs:
+    - job: build-job    
+      steps:
+      - task: NuGetToolInstaller@1
+        displayName: "Installing nuget"
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+      - task: NuGetCommand@2
+        displayName: "Restore Nuget Packages"
+        inputs:
+          restoreSolution: '$(solution)'
 
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+      - task: VSBuild@1
+        displayName: "MS Build Asp.Net"
+        inputs:
+          solution: '$(solution)'
+          msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+          platform: '$(buildPlatform)'
+          configuration: '$(buildConfiguration)'
+      - task: PublishPipelineArtifact@1
+        inputs:
+          targetPath: '$(build.artifactStagingDirectory)'
+          artifact: 'aspnet-package'
+          publishLocation: 'pipeline'
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact'
-  inputs:
-    PathtoPublish: '$(build.artifactstagingdirectory)'
-    ArtifactName: 'dotnet-framework'
+- stage: "deployaws"
+  displayName: "Deploy to Aws App Service"
+  jobs:
+    - deployment: "awsdeployment"    
+      strategy:
+        runOnce:
+          deploy:
+           steps:
+            - task: AzureRmWebAppDeployment@4
+              inputs:
+                ConnectionType: 'AzureRM'
+                azureSubscription: 'Azure Bitworks'
+                appType: 'webApp'
+                WebAppName: 'demo-asp-net'
+                packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+               
+            
+
