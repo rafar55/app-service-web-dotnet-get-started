@@ -55,7 +55,7 @@ stages:
               displayName: "Download Pipeline Artifact"
               inputs:
                 buildType: 'current'
-                artifactName: '$(artifactName)'
+                artifactName: 'aspnet-package'
                 itemPattern: '**/*.zip'
                 targetPath: '$(Pipeline.Workspace)'
             - task: AzureRmWebAppDeployment@4
