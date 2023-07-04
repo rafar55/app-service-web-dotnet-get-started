@@ -24,12 +24,12 @@ steps:
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageLocation=$(build.artifactstagingdirectory)\Packages'
+    msbuildArgs: '/t:build /p:DeployOnBuild=true /p:OutputPath="$(Build.ArtifactStagingDirectory)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: '$(build.artifactStagingDirectory)\Packages'
+    targetPath: '$(build.artifactStagingDirectory)'
     artifact: 'donetframework'
     publishLocation: 'pipeline'
