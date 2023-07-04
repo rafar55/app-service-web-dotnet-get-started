@@ -43,9 +43,10 @@ stages:
 
 - stage: deployaws
   dependsOn: buildapplication
-  displayName: "Deploy to Aws App Service"
+  displayName: "Deploy to Aws App Service" 
   jobs:
-    - deployment: "awsdeployment"    
+    - deployment: "awsdeployment"
+      environment: Production
       strategy:
         runOnce:
           deploy:
